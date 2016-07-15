@@ -1,4 +1,4 @@
-# chronos
+# Chronos
 Scheduler API for managing work shifts. This is a coding exercise from When I Work.
 
 ----
