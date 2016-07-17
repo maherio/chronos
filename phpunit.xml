@@ -1,0 +1,7 @@
+<phpunit boostrap="./tests/bootstrap.php">
+    <testsuites>
+        <testsuite name="Chronos Domains">
+            <directory>./tests/Domain</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>
