@@ -1,0 +1,21 @@
+{
+    "name": "maherio/chronos",
+    "description": "A sample work scheduler.",
+    "type": "project",
+    "license": "GPL-3.0+",
+    "authors": [
+        {
+            "name": "Tony Maher",
+            "homepage": "https://github.com/maherio"
+        }
+    ],
+    "require": {
+        "equip/framework": "^2.1",
+        "zendframework/zend-diactoros": "^1.0.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Maherio\\Chronos\\": "src/"
+        }
+    }
+}
