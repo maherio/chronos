@@ -3,6 +3,13 @@ Scheduler API for managing work shifts. This is a coding exercise from When I Wo
 
 ----
 
+# Implementation Notes
+
+- I chose to try out Equip. I'd never used any of the 3 suggested frameworks before so I figured I might as well try out the in-house one.
+- Normally I wouldn't bother with unit testing on a MVP-type of project since it will never be maintained, but I figured I'd include some to show my testing style.
+
+----
+
 # REST Scheduler API
 
 While we will accept a framework of your choice, and a language of your choice, we _highly_ encourage using **PHP*** and one of the following frameworks: [Equip](https://github.com/equip/framework), [Radar](https://github.com/radarphp/Radar.Project), or [Proton](https://github.com/alexbilbie/proton).
