@@ -3,6 +3,28 @@ Scheduler API for managing work shifts. This is a coding exercise from When I Wo
 
 ----
 
+# Instructions
+
+To run this project, follow these steps:
+
+- Grab a copy of the repository and navigate to it
+```bash
+git clone https://github.com/maherio/chronos.git
+cd chronos
+```
+- Locally install the project dependencies
+```bash
+composer install
+```
+- Run a shell instance of the project
+```bash
+chmod 755 ./bin/serve
+./bin/serve
+```
+- Go to your browser and enter `localhost:8000` into the URL bar
+
+----
+
 # Implementation Notes
 
 - I chose to try out Equip. I'd never used any of the 3 suggested frameworks before so I figured I might as well try out the in-house one.
