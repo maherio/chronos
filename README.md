@@ -1,4 +1,7 @@
 # Chronos
+
+[![Build Status](https://travis-ci.org/maherio/chronos.svg?branch=master)](https://travis-ci.org/maherio/chronos)
+
 Scheduler API for managing work shifts. This is a coding exercise from When I Work.
 
 ----

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<phpunit boostrap="./tests/bootstrap.php">
+<phpunit bootstrap="./tests/bootstrap.php">
     <testsuites>
-        <testsuite name="Chronos Domains">
-            <directory>./tests/Domain</directory>
+        <testsuite name="Chronos">
+            <directory>./tests</directory>
         </testsuite>
     </testsuites>
 </phpunit>
