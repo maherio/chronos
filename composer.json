@@ -11,7 +11,8 @@
     ],
     "require": {
         "equip/framework": "^2.1",
-        "zendframework/zend-diactoros": "^1.0.4"
+        "zendframework/zend-diactoros": "^1.0.4",
+        "equip/data": "^2.4"
     },
     "autoload": {
         "psr-4": {
