@@ -2,34 +2,24 @@
 
 namespace Maherio\Chronos\Data\Repository;
 
+use Maherio\Chronos\Data\Mapper\ShiftMapper;
+use Maherio\Chronos\Data\Entity\Shift;
 use Equip\Data\Repository\RepositoryInterface;
+use Equip\Data\Repository\CreateRepositoryInterface;
+use Spot\Locator;
+use DateTime;
 
-class ShiftRepository implements RepositoryInterface {
+class ShiftRepository implements RepositoryInterface, CreateRepositoryInterface {
 
-    protected $shifts = [];
+    /**
+     * The Spot Locator used for instantiating data mappers
+     * @var \Spot\Locator
+     */
+    protected $dataMapper;
 
-    public function __construct() {
-        //just stub out something to return for now
-        $this->shifts[] = (object)[
-            'id' => 1,
-            'manager' => 'test',
-            'employee' => 'test',
-            'break' => 'test',
-            'start_time' => 'test',
-            'end_time' => 'test',
-            'created_at' => 'test',
-            'updated_at' => 'test'
-        ];
-        $this->shifts[] = (object)[
-            'id' => 2,
-            'manager' => 'test',
-            'employee' => 'test',
-            'break' => 'test',
-            'start_time' => 'test',
-            'end_time' => 'test',
-            'created_at' => 'test',
-            'updated_at' => 'test'
-        ];
+    public function __construct(ShiftMapper $mapper) {
+        $this->dataMapper = $mapper;
+        $this->dataMapper->migrate();
     }
 
     /**
@@ -40,7 +30,7 @@ class ShiftRepository implements RepositoryInterface {
      * @return object|null
      */
     public function find($id) {
-        return $this->shifts;
+        return $this->dataMapper->get($id);
     }
 
     /**
@@ -51,7 +41,9 @@ class ShiftRepository implements RepositoryInterface {
      * @return array|Traversable
      */
     public function findByIds(array $ids) {
-        return $this->shifts;
+        return $this->dataMapper
+            ->where(['id' => $ids])
+            ->execute();;
     }
 
     /**
@@ -62,7 +54,9 @@ class ShiftRepository implements RepositoryInterface {
      * @return object|null
      */
     public function findOneBy(array $criteria) {
-        return $this->shifts;
+        return $this->dataMapper
+            ->where($criteria)
+            ->execute();
     }
 
     /**
@@ -76,6 +70,45 @@ class ShiftRepository implements RepositoryInterface {
      * @return array|Traversable
      */
     public function findBy(array $criteria, array $order_by = null, $limit = null, $offset = null) {
-        return $this->shifts;
+        $query = $this->dataMapper->select();
+
+        if(!empty($criteria)) {
+            $query = $query->where($criteria);
+        } else if(!is_null($order_by)) {
+            $query = $query->order($order_by);
+        } else if(!is_null($limit)) {
+            $query = $query->limit($limit);
+        } else if(!is_null($offset)) {
+            $query = $query->offset($offset);
+        }
+
+        return $query->execute();
+    }
+
+    /**
+     * Create a new object and return it
+     *
+     * @param array $values
+     *
+     * @return object
+     */
+    public function create(array $values) {
+        $shiftValues = $this->getValidatedShiftValues($values);
+        return $this->dataMapper->create($shiftValues);
+    }
+
+    protected function getValidatedShiftValues($proposedValues = []) {
+        $validatedValues = [];
+        foreach (Shift::fields() as $field => $fieldParameters) {
+            if(array_key_exists($field, $proposedValues)) {
+                if($fieldParameters['type'] == 'datetime') {
+                    $validatedValues[$field] = new DateTime($proposedValues[$field]);
+                } else {
+                    $validatedValues[$field] = $proposedValues[$field];
+                    settype($validatedValues[$field], $fieldParameters['type']);
+                }
+            }
+        }
+        return $validatedValues;
     }
 }

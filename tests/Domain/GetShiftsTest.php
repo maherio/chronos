@@ -6,14 +6,17 @@ use Maherio\Chronos\Domain\GetShifts;
 use Maherio\Chronos\Data\Repository\ShiftRepository;
 use Equip\Payload;
 use Equip\Adr\PayloadInterface;
+use Spot\Config;
+use Spot\Locator;
 
 class GetShiftsTest extends PHPUnit_Framework_TestCase {
+    protected $testConfig;
     protected $getShiftsDomain;
 
     protected function setUp() {
-        $payload = new Payload();
-        $shiftRepository = new ShiftRepository();
-        $this->getShiftsDomain = new GetShifts($payload, $shiftRepository);
+        $this->testConfig = new TestConfig;
+        $payload = new Payload;
+        $this->getShiftsDomain = new GetShifts($payload, $this->testConfig->getShiftRepository());
     }
 
     protected function getShifts($input) {
@@ -33,5 +36,16 @@ class GetShiftsTest extends PHPUnit_Framework_TestCase {
         $newPayload = $this->getShifts($input);
 
         $this->assertEquals(PayloadInterface::STATUS_OK, $newPayload->getStatus());
+    }
+
+    public function testReturnsCorrectAmountOfShifts() {
+        $input = [];
+        $newPayload = $this->getShifts($input);
+        $output = $newPayload->getOutput();
+        $expectedCount = count($this->testConfig->getShiftData());
+
+
+        $this->assertArrayHasKey('shifts', $output);
+        $this->assertCount($expectedCount, $output['shifts']);
     }
 }

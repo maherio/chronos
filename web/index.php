@@ -3,6 +3,7 @@
 require __DIR__ . '/../vendor/autoload.php';
 
 use Maherio\Chronos\Domain;
+use Maherio\Chronos\Configuration\SpotConfiguration;
 
 Equip\Application::build()
 ->setConfiguration([
@@ -11,6 +12,7 @@ Equip\Application::build()
     Equip\Configuration\PayloadConfiguration::class,
     Equip\Configuration\RelayConfiguration::class,
     Equip\Configuration\WhoopsConfiguration::class,
+    Maherio\Chronos\Configuration\SpotConfiguration::class,
 ])
 ->setMiddleware([
     Relay\Middleware\ResponseSender::class,
