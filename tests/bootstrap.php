@@ -55,22 +55,32 @@ class TestConfig {
             [
                 'id' => 1,
                 'manager_id' => 1,
-                'employee_id' => 2,
+                'employee_id' => 3,
                 'break' => 1.5,
                 'start_time' => date(DateTime::RFC2822, strtotime('+1 day')),
-                'end_time' => date(DateTime::RFC2822, strtotime('+2 days')),
+                'end_time' => date(DateTime::RFC2822, strtotime('+1.5 days')),
                 'created_at' => date(DateTime::RFC2822, strtotime('-1 day')),
                 'updated_at' => date(DateTime::RFC2822)
             ],
             [
                 'id' => 2,
                 'manager_id' => 1,
-                'employee_id' => 3,
+                'employee_id' => 4,
                 'break' => 2.0,
                 'start_time' => date(DateTime::RFC2822, strtotime('+2 days')),
                 'end_time' => date(DateTime::RFC2822, strtotime('+3 days')),
                 'created_at' => date(DateTime::RFC2822, strtotime('-1 hour')),
                 'updated_at' => date(DateTime::RFC2822, strtotime('-1 minute'))
+            ],
+            [
+                'id' => 3,
+                'manager_id' => 2,
+                'employee_id' => 3,
+                'break' => 2.5,
+                'start_time' => date(DateTime::RFC2822, strtotime('+2.5 days')),
+                'end_time' => date(DateTime::RFC2822, strtotime('+3.5 days')),
+                'created_at' => date(DateTime::RFC2822, strtotime('-1.5 days')),
+                'updated_at' => date(DateTime::RFC2822, strtotime('-1.5 days'))
             ],
         ];
     }

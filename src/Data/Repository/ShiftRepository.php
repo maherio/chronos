@@ -54,6 +54,7 @@ class ShiftRepository implements RepositoryInterface, CreateRepositoryInterface 
      * @return object|null
      */
     public function findOneBy(array $criteria) {
+        $criteria = $this->getValidatedShiftValues($criteria);
         return $this->dataMapper
             ->where($criteria)
             ->execute();
@@ -71,6 +72,8 @@ class ShiftRepository implements RepositoryInterface, CreateRepositoryInterface 
      */
     public function findBy(array $criteria, array $order_by = null, $limit = null, $offset = null) {
         $query = $this->dataMapper->select();
+
+        $criteria = $this->getValidatedShiftValues($criteria);
 
         if(!empty($criteria)) {
             $query = $query->where($criteria);

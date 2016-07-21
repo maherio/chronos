@@ -13,6 +13,11 @@ class GetShifts implements DomainInterface {
     private $payload;
 
     /**
+     * @var ShiftRepository
+     */
+    protected $shiftRepository;
+
+    /**
      * @param PayloadInterface $payload
      */
     public function __construct(PayloadInterface $payload, ShiftRepository $shiftRepository)
@@ -26,30 +31,7 @@ class GetShifts implements DomainInterface {
      */
     public function __invoke(array $input)
     {
-        // $shifts = [
-        //     (object)[
-        //         'id' => 1,
-        //         'manager' => 'test',
-        //         'employee' => 'test',
-        //         'break' => 'test',
-        //         'start_time' => 'test',
-        //         'end_time' => 'test',
-        //         'created_at' => 'test',
-        //         'updated_at' => 'test'
-        //     ],
-        //     (object)[
-        //         'id' => 2,
-        //         'manager' => 'test',
-        //         'employee' => 'test',
-        //         'break' => 'test',
-        //         'start_time' => 'test',
-        //         'end_time' => 'test',
-        //         'created_at' => 'test',
-        //         'updated_at' => 'test'
-        //     ],
-        // ];
-
-        $shifts = $this->shiftRepository->findBy([]);
+        $shifts = $this->shiftRepository->findBy($input);
         return $this->payload
             ->withStatus(PayloadInterface::STATUS_OK)
             ->withOutput([
