@@ -1,13 +1,8 @@
 <?php
 
-// use PHPUnit\Framework\TestCase;
-
 use Maherio\Chronos\Domain\GetShifts;
-use Maherio\Chronos\Data\Repository\ShiftRepository;
 use Equip\Payload;
 use Equip\Adr\PayloadInterface;
-use Spot\Config;
-use Spot\Locator;
 
 class GetShiftsTest extends PHPUnit_Framework_TestCase {
     protected $testConfig;
@@ -20,7 +15,7 @@ class GetShiftsTest extends PHPUnit_Framework_TestCase {
     }
 
     protected function getShifts($input) {
-        $getShifts = $this->getShiftsDomain; //unfortunately php doesn't support {$this->welcomeDomain}($input);
+        $getShifts = $this->getShiftsDomain; //unfortunately php doesn't support {$this->variable}($input);
         return $getShifts($input);
     }
 

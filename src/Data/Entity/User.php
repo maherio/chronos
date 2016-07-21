@@ -9,6 +9,7 @@ use DateTime;
 
 class User extends Entity {
     protected static $table = 'users';
+    protected static $mapper = 'Maherio\Chronos\Data\Mapper\UserMapper';
 
     public static function fields()
     {
