@@ -31,6 +31,20 @@ class GetShiftsTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($stubbedShift['updated_at'], $actualShift->updated_at->format(DateTime::RFC2822));
     }
 
+    protected function checkManager($manager) {
+        $userData = $this->testConfig->getUserData();
+        foreach ($userData as $user) {
+            if($user['id'] == $manager->id) {
+                $this->assertEquals($user['name'], $manager->name);
+                $this->assertEquals($user['role'], $manager->role);
+                $this->assertEquals($user['email'], $manager->email);
+                $this->assertEquals($user['phone'], $manager->phone);
+                $this->assertEquals($user['created_at'], $manager->created_at->format(DateTime::RFC2822));
+                $this->assertEquals($user['updated_at'], $manager->updated_at->format(DateTime::RFC2822));
+            }
+        }
+    }
+
     public function testReturnsAPayload() {
         $input = [];
         $newPayload = $this->getShifts($input);
@@ -86,5 +100,23 @@ class GetShiftsTest extends PHPUnit_Framework_TestCase {
 
         $this->assertEquals(PayloadInterface::STATUS_OK, $newPayload->getStatus());
         $this->assertEquals($expectedCount, $actualCount);
+    }
+
+    //USER STORY 4
+    public function testReturnsShiftsWithManager() {
+        $input = [
+            'employee_id' => 3,
+            'include_manager' => true
+        ];
+        $newPayload = $this->getShifts($input);
+        $output = $newPayload->getOutput();
+
+        //loop through each returned shift and make sure the manager is correct
+        foreach ($output['shifts'] as $actualShift) {
+            if(!is_null($actualShift->manager_id)) {
+                $this->assertNotNull($actualShift->manager);
+                $this->checkManager($actualShift->manager);
+            }
+        }
     }
 }

@@ -7,6 +7,7 @@ use Maherio\Chronos\Data\Entity\Shift;
 use Equip\Data\Repository\RepositoryInterface;
 use Equip\Data\Repository\CreateRepositoryInterface;
 use Spot\Locator;
+use Spot\Query;
 use DateTime;
 
 class ShiftRepository implements RepositoryInterface, CreateRepositoryInterface {
@@ -73,6 +74,28 @@ class ShiftRepository implements RepositoryInterface, CreateRepositoryInterface 
     public function findBy(array $criteria, array $order_by = null, $limit = null, $offset = null) {
         $query = $this->dataMapper->select();
 
+        return $this->genericFind($query, $criteria, $order_by, $limit, $offset);
+    }
+
+    /**
+     * Find multiple objects by variable criteria, but include related Manager resources
+     *
+     * @param array $criteria
+     * @param array $order_by
+     * @param integer $limit
+     * @param integer $offset
+     *
+     * @return array|Traversable
+     */
+    public function findByWithManager(array $criteria, array $order_by = null, $limit = null, $offset = null) {
+        $query = $this->dataMapper
+            ->all()
+            ->with('manager');
+
+        return $this->genericFind($query, $criteria, $order_by, $limit, $offset);
+    }
+
+    protected function genericFind(Query $query, array $criteria, array $order_by = null, $limit = null, $offset = null) {
         $criteria = $this->getValidatedShiftValues($criteria);
 
         if(!empty($criteria)) {

@@ -31,7 +31,12 @@ class GetShifts implements DomainInterface {
      */
     public function __invoke(array $input)
     {
-        $shifts = $this->shiftRepository->findBy($input);
+        if(array_key_exists('include_manager', $input)) {
+            $shifts = $this->shiftRepository->findByWithManager($input);
+        } else {
+            $shifts = $this->shiftRepository->findBy($input);
+        }
+
         return $this->payload
             ->withStatus(PayloadInterface::STATUS_OK)
             ->withOutput([

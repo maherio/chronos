@@ -2,6 +2,7 @@
 
 namespace Maherio\Chronos\Data\Entity;
 
+use Maherio\Chronos\Data\Entity\Shift;
 use Spot\MapperInterface;
 use Spot\Entity;
 use Spot\EntityInterface;

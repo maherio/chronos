@@ -19,6 +19,10 @@ class SpotConfiguration implements ConfigurationInterface
         $shiftEntity = 'Maherio\Chronos\Data\Entity\Shift';
         $injector->define($shiftMapper, [':entityName' => $shiftEntity]);
 
+        $userMapper = 'Maherio\Chronos\Data\Mapper\UserMapper';
+        $userEntity = 'Maherio\Chronos\Data\Entity\User';
+        $injector->define($userMapper, [':entityName' => $userEntity]);
+
         //set up database connection
         $injector->delegate('Spot\Locator', function(Config $config) {
             $sqlitePath = __DIR__ . '/../Database/database.sqlite';
