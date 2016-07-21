@@ -6,7 +6,7 @@ use Maherio\Chronos\Data\Repository\ShiftRepository;
 use Equip\Adr\DomainInterface;
 use Equip\Adr\PayloadInterface;
 
-class CreateShift implements DomainInterface {
+class UpsertShift implements DomainInterface {
     /**
      * @var PayloadInterface
      */
@@ -27,21 +27,32 @@ class CreateShift implements DomainInterface {
     public function __invoke(array $input)
     {
         $status = PayloadInterface::STATUS_INTERNAL_SERVER_ERROR;
+        $success = false;
         $output = [];
 
-        try {
+        $shift = $this->shiftRepository->find($input['id']);
+
+        if($shift) {
+            //update the shift
+            $shift = $this->shiftRepository->update($shift, $input);
+        } else {
             $shift = $this->shiftRepository->create($input);
-            $this->shiftRepository->save($shift);
+        }
+
+        $success = $this->shiftRepository->save($shift);
+
+        if($success) {
             $status = PayloadInterface::STATUS_OK;
             $output = [
                 'shifts' => $shift
             ];
-        } catch(\Exception $exception) {
-            $status = PayloadInterface::STATUS_BAD_REQUEST; //we'll just assume bad input for now
+        } else {
+            $status = PayloadInterface::STATUS_BAD_REQUEST;
             $output = [
-                'error' => $exception->getMessage() //this leaks way to much internal stuff and isn't terribly helpful, but it will do for now
+                'errors' => $shift->errors()
             ];
         }
+
         return $this->payload
             ->withStatus($status)
             ->withOutput($output);

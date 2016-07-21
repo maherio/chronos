@@ -3,78 +3,15 @@
 namespace Maherio\Chronos\Data\Repository;
 
 use Maherio\Chronos\Data\Mapper\ShiftMapper;
-use Maherio\Chronos\Data\Entity\Shift;
-use Equip\Data\Repository\RepositoryInterface;
-use Equip\Data\Repository\CreateRepositoryInterface;
-use Spot\Locator;
-use Spot\Query;
-use DateTime;
+use Maherio\Chronos\Data\Repository\Repository;
 
-class ShiftRepository implements RepositoryInterface, CreateRepositoryInterface {
-
-    /**
-     * The Spot Locator used for instantiating data mappers
-     * @var \Spot\Locator
-     */
-    protected $dataMapper;
+//Note: I'm not using the Equip's Create or Update repository interfaces because I want to create entities without
+//saving them, plus save(entity) works perfectly with Spot.
+class ShiftRepository extends Repository {
+    protected $entityClass = 'Maherio\Chronos\Data\Entity\Shift';
 
     public function __construct(ShiftMapper $mapper) {
-        $this->dataMapper = $mapper;
-        $this->dataMapper->migrate();
-    }
-
-    /**
-     * Find a single object by identifier
-     *
-     * @param mixed $id
-     *
-     * @return object|null
-     */
-    public function find($id) {
-        return $this->dataMapper->get($id);
-    }
-
-    /**
-     * Find multiple objects by their identifiers
-     *
-     * @param array $ids
-     *
-     * @return array|Traversable
-     */
-    public function findByIds(array $ids) {
-        return $this->dataMapper
-            ->where(['id' => $ids])
-            ->execute();;
-    }
-
-    /**
-     * Find a single object by variable criteria
-     *
-     * @param array $criteria
-     *
-     * @return object|null
-     */
-    public function findOneBy(array $criteria) {
-        $criteria = $this->getValidatedShiftValues($criteria);
-        return $this->dataMapper
-            ->where($criteria)
-            ->execute();
-    }
-
-    /**
-     * Find multiple objects by variable criteria
-     *
-     * @param array $criteria
-     * @param array $order_by
-     * @param integer $limit
-     * @param integer $offset
-     *
-     * @return array|Traversable
-     */
-    public function findBy(array $criteria, array $order_by = null, $limit = null, $offset = null) {
-        $query = $this->dataMapper->select();
-
-        return $this->genericFind($query, $criteria, $order_by, $limit, $offset);
+        return parent::__construct($mapper);
     }
 
     /**
@@ -93,48 +30,5 @@ class ShiftRepository implements RepositoryInterface, CreateRepositoryInterface 
             ->with('manager');
 
         return $this->genericFind($query, $criteria, $order_by, $limit, $offset);
-    }
-
-    protected function genericFind(Query $query, array $criteria, array $order_by = null, $limit = null, $offset = null) {
-        $criteria = $this->getValidatedShiftValues($criteria);
-
-        if(!empty($criteria)) {
-            $query = $query->where($criteria);
-        } else if(!is_null($order_by)) {
-            $query = $query->order($order_by);
-        } else if(!is_null($limit)) {
-            $query = $query->limit($limit);
-        } else if(!is_null($offset)) {
-            $query = $query->offset($offset);
-        }
-
-        return $query->execute();
-    }
-
-    /**
-     * Create a new object and return it
-     *
-     * @param array $values
-     *
-     * @return object
-     */
-    public function create(array $values) {
-        $shiftValues = $this->getValidatedShiftValues($values);
-        return $this->dataMapper->create($shiftValues);
-    }
-
-    protected function getValidatedShiftValues($proposedValues = []) {
-        $validatedValues = [];
-        foreach (Shift::fields() as $field => $fieldParameters) {
-            if(array_key_exists($field, $proposedValues)) {
-                if($fieldParameters['type'] == 'datetime') {
-                    $validatedValues[$field] = new DateTime($proposedValues[$field]);
-                } else {
-                    $validatedValues[$field] = $proposedValues[$field];
-                    settype($validatedValues[$field], $fieldParameters['type']);
-                }
-            }
-        }
-        return $validatedValues;
     }
 }

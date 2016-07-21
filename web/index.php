@@ -25,9 +25,9 @@ Equip\Application::build()
 ->setRouting(function (Equip\Directory $directory) {
     return $directory
     ->get('/', Domain\Welcome::class)
-    ->get('/shifts', Domain\GetShifts::class) //1, 2, 3, 4, 6
+    ->get('/shifts', Domain\GetShifts::class) //1, 2, 4, 6
     ->post('/shifts', Domain\CreateShift::class) //5
-    ->put('/shifts/(shift)', Domain\UpsertShift::class) //7, 8
+    ->put('/shifts/{id:\d+}', Domain\UpsertShift::class) //7, 8
     ->get('/users', Domain\GetUsers::class) //9
     ;
 })

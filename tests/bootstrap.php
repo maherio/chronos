@@ -59,7 +59,8 @@ class TestConfig {
     protected function seedShiftRepository($shiftRepository) {
         $shifts = $this->getShiftData();
         foreach ($shifts as $shiftValues) {
-            $shiftRepository->create($shiftValues);
+            $shift = $shiftRepository->create($shiftValues);
+            $shiftRepository->save($shift);
         }
         return $shiftRepository;
     }
@@ -67,8 +68,10 @@ class TestConfig {
     protected function seedUserRepository($userRepository) {
         $users = $this->getUserData();
         foreach ($users as $userValues) {
-            $userRepository->create($userValues);
+            $user = $userRepository->create($userValues);
+            $success = $userRepository->save($user);
         }
+
         return $userRepository;
     }
 
