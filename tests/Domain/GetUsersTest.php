@@ -44,6 +44,7 @@ class GetUsersTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(PayloadInterface::STATUS_OK, $newPayload->getStatus());
     }
 
+    //USER STORY 9
     public function testReturnsCorrectUser() {
         $input = [
             'id' => 3

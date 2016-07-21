@@ -64,6 +64,7 @@ class CreateShiftTest extends PHPUnit_Framework_TestCase {
         $this->assertInstanceOf(Payload::class, $newPayload);
     }
 
+    //USER STORY 5
     public function testCreatesAShift() {
         $input = [
             'manager_id' => 1,
