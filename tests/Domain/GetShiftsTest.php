@@ -51,11 +51,13 @@ class GetShiftsTest extends PHPUnit_Framework_TestCase {
         $output = $newPayload->getOutput();
         $expectedCount = count($this->testConfig->getShiftData());
 
+        $this->assertEquals(PayloadInterface::STATUS_OK, $newPayload->getStatus());
         $this->assertArrayHasKey('shifts', $output);
         $this->assertCount($expectedCount, $output['shifts']);
     }
 
-    public function testReturnsCorrectShiftsForUser() {
+    //USER STORY 1
+    public function testReturnsShiftsForUser() {
         $input = [
             'employee_id' => 3
         ];
@@ -82,6 +84,7 @@ class GetShiftsTest extends PHPUnit_Framework_TestCase {
             }
         }
 
+        $this->assertEquals(PayloadInterface::STATUS_OK, $newPayload->getStatus());
         $this->assertEquals($expectedCount, $actualCount);
     }
 }

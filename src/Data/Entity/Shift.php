@@ -18,7 +18,7 @@ class Shift extends Entity {
     {
         return [
             'id'                 => ['type' => 'integer', 'primary' => true, 'autoincrement' => true],
-            static::$managerKey  => ['type' => 'integer'],
+            static::$managerKey  => ['type' => 'integer', 'required' => true],
             static::$employeeKey => ['type' => 'integer'],
             'break'              => ['type' => 'float'],
             'start_time'         => ['type' => 'datetime', 'required' => true, 'index' => true],

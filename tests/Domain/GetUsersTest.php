@@ -51,6 +51,7 @@ class GetUsersTest extends PHPUnit_Framework_TestCase {
         $newPayload = $this->getUsers($input);
         $output = $newPayload->getOutput();
 
+        $this->assertEquals(PayloadInterface::STATUS_OK, $newPayload->getStatus());
         $this->assertCount(1, $output['users']);
 
         //loop through each stubbed user to get the correct user
