@@ -135,16 +135,21 @@ abstract class Repository implements RepositoryInterface {
 
     protected function getValidatedValues($proposedValues = []) {
         $validatedValues = [];
-        foreach ($this->entityClass::fields() as $field => $fieldParameters) {
-            if(array_key_exists($field, $proposedValues)) {
-                if($fieldParameters['type'] == 'datetime') {
-                    $validatedValues[$field] = new DateTime($proposedValues[$field]);
-                } else {
-                    $validatedValues[$field] = $proposedValues[$field];
-                    settype($validatedValues[$field], $fieldParameters['type']);
+        $entityClass = $this->entityClass;
+        foreach ($entityClass::fields() as $field => $fieldParameters) {
+            //loop through to check comparison operators, which just need to start with the field
+            foreach ($proposedValues as $proposedKey => $value) {
+                if(strpos($proposedKey, $field) === 0) {
+                    if($fieldParameters['type'] == 'datetime') {
+                        $validatedValues[$proposedKey] = new DateTime($proposedValues[$proposedKey]);
+                    } else {
+                        $validatedValues[$proposedKey] = $proposedValues[$proposedKey];
+                        settype($validatedValues[$field], $fieldParameters['type']);
+                    }
                 }
             }
         }
+
         return $validatedValues;
     }
 }
