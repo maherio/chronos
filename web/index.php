@@ -29,6 +29,7 @@ Equip\Application::build()
     ->post('/shifts', Domain\CreateShift::class) //5
     ->put('/shifts/{id:\d+}', Domain\UpsertShift::class) //7, 8
     ->get('/users', Domain\GetUsers::class) //9
+    ->get('/users/{employee_id:\d+}/hours', Domain\GetHours::class) //3
     ;
 })
 ->run();
