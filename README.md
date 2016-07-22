@@ -49,9 +49,7 @@ out the When I Work in-house one.
  - Improve input validation (making sure request params are valid) as well as entity validation (things like making
  sure end_date is after start_date).
  - Add paging and smarter response functionality (like not showing past shifts by default, enable looking up hours by a specific week).
- - Correct any PUT calls.
-  - A PUT request should take in the full resource, not just specific fields.
-  - I also couldn't get Equip to accept request body parameters, so I left them as query parameters for now. I'd want to
+ - Correct any PUT calls. A PUT request should take in the full resource, not just specific fields. I also couldn't get Equip to accept request body parameters, so I left them as query parameters for now. I'd want to
   correct that to be just like POST params and pass data through the request body instead of the url.
  - Improve graceful error handling and informative responses.
  - Flesh out some more necessary functionality like creating users.
