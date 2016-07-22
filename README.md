@@ -30,7 +30,6 @@ chmod 755 ./bin/serve
 
 - I chose to try out Equip. I'd never used any of the 3 suggested frameworks before so I figured I might as well try
 out the When I Work in-house one.
- -
 - I feel like I need to clarify how I interpreted the prompt, specifically these parts:
  - The prompt says to build a RESTful API, but that it is not intended to be just a CRUD application. Those are slightly
  contradictory statements (a restful api IS just a crud service for resource representations). Therefore, I interpreted
