@@ -24,10 +24,17 @@ class ShiftRepository extends Repository {
      *
      * @return array|Traversable
      */
-    public function findByWithManager(array $criteria, array $order_by = null, $limit = null, $offset = null) {
+    public function findByWithRelations(array $relations, array $criteria, array $order_by = null, $limit = null, $offset = null) {
         $query = $this->dataMapper
-            ->all()
-            ->with('manager');
+            ->all();
+
+        if(in_array('manager', $relations)) {
+            $query = $query->with('manager');
+        }
+
+        if(in_array('employee', $relations)) {
+            $query = $query->with('employee');
+        }
 
         return $this->genericFind($query, $criteria, $order_by, $limit, $offset);
     }

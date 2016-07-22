@@ -83,7 +83,8 @@ abstract class Repository implements RepositoryInterface {
     }
 
     protected function genericFind(Query $query, array $criteria, array $order_by = null, $limit = null, $offset = null) {
-        $criteria = $this->getValidatedValues($criteria);
+        $datetimeFormat = 'string';
+        $criteria = $this->getValidatedValues($criteria, $datetimeFormat);
 
         if(!empty($criteria)) {
             $query = $query->where($criteria);
@@ -133,7 +134,7 @@ abstract class Repository implements RepositoryInterface {
         return $entity->data($validatedValues);
     }
 
-    protected function getValidatedValues($proposedValues = []) {
+    protected function getValidatedValues($proposedValues = [], $datetimeFormat = 'datetime') {
         $validatedValues = [];
         $entityClass = $this->entityClass;
         foreach ($entityClass::fields() as $field => $fieldParameters) {
@@ -141,7 +142,16 @@ abstract class Repository implements RepositoryInterface {
             foreach ($proposedValues as $proposedKey => $value) {
                 if(strpos($proposedKey, $field) === 0) {
                     if($fieldParameters['type'] == 'datetime') {
-                        $validatedValues[$proposedKey] = new DateTime($proposedValues[$proposedKey]);
+                        //make sure it's in a consistent datetime format
+                        $proposedTimestamp = strtotime($proposedValues[$proposedKey]);
+                        $proposedDatetime = date('Y-m-d H:i:s', $proposedTimestamp);
+
+                        //this is ugly but for some stupid reason Spot ORM needs this to be a string sometimes and a datetime others... so dumb
+                        if($datetimeFormat == 'datetime') {
+                            $validatedValues[$proposedKey] = new DateTime($proposedDatetime);
+                        } else if($datetimeFormat == 'string') {
+                            $validatedValues[$proposedKey] = $proposedDatetime;
+                        }
                     } else {
                         $validatedValues[$proposedKey] = $proposedValues[$proposedKey];
                         settype($validatedValues[$field], $fieldParameters['type']);

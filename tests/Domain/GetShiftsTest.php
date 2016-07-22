@@ -31,18 +31,29 @@ class GetShiftsTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($stubbedShift['updated_at'], $actualShift->updated_at->format(DateTime::RFC2822));
     }
 
-    protected function checkManager($manager) {
+    protected function checkUser($user) {
         $userData = $this->testConfig->getUserData();
-        foreach ($userData as $user) {
-            if($user['id'] == $manager->id) {
-                $this->assertEquals($user['name'], $manager->name);
-                $this->assertEquals($user['role'], $manager->role);
-                $this->assertEquals($user['email'], $manager->email);
-                $this->assertEquals($user['phone'], $manager->phone);
-                $this->assertEquals($user['created_at'], $manager->created_at->format(DateTime::RFC2822));
-                $this->assertEquals($user['updated_at'], $manager->updated_at->format(DateTime::RFC2822));
+        foreach ($userData as $stubbedUser) {
+            if($stubbedUser['id'] == $user->id) {
+                $this->assertEquals($stubbedUser['name'], $user->name);
+                $this->assertEquals($stubbedUser['role'], $user->role);
+                $this->assertEquals($stubbedUser['email'], $user->email);
+                $this->assertEquals($stubbedUser['phone'], $user->phone);
+                $this->assertEquals($stubbedUser['created_at'], $user->created_at->format(DateTime::RFC2822));
+                $this->assertEquals($stubbedUser['updated_at'], $user->updated_at->format(DateTime::RFC2822));
             }
         }
+    }
+
+    protected function checkShiftExists($expectedShift, $shifts) {
+        foreach ($shifts as $shift) {
+            if($shift->id == $expectedShift['id']) {
+                $this->compareShifts($expectedShift, $shift);
+                return; //we found it, no need to keep going
+            }
+        }
+
+        $this->assertTrue(false, 'Did not find expected shift in shifts array');
     }
 
     public function testReturnsAPayload() {
@@ -102,6 +113,60 @@ class GetShiftsTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($expectedCount, $actualCount);
     }
 
+    //USER STORY 2
+    public function testReturnsShiftsWithinTimeframeWithEmployees() {
+        //hmm this test is too brittle for my liking... it requires knowledge of the stub dates. Oh well, it works for this
+        $shiftStartTime = date(DateTime::RFC2822, 1465830000);
+        $shiftEndTime = date(DateTime::RFC2822, 1465831000);
+
+        $input = [
+            'starts_before' => $shiftEndTime,
+            'ends_after' => $shiftStartTime,
+            'include_employee' => true
+        ];
+        $newPayload = $this->getShifts($input);
+        $output = $newPayload->getOutput();
+
+        $this->assertArrayHasKey('shifts', $output);
+
+        foreach ($this->testConfig->getShiftData() as $shift) {
+            if($shift['start_time'] <= $shiftEndTime && $shift['end_time'] >= $shiftStartTime) {
+                //found a shift that should be returned
+                $this->checkShiftExists($shift, $output['shifts']);
+            }
+        }
+
+        foreach ($output['shifts'] as $shift) {
+            if(!is_null($shift->employee_id)) {
+                $this->checkUser($shift->employee);
+            }
+        }
+    }
+
+    //USER STORY 6
+    public function testReturnsShiftsWithinTimeframe() {
+        //hmm this test is too brittle for my liking... it requires knowledge of the stub dates. Oh well, it works for this
+        $shiftStartTime = date(DateTime::RFC2822, 1465830000);
+        $shiftEndTime = date(DateTime::RFC2822, 1465831000);
+
+        $input = [
+            'starts_before' => $shiftEndTime,
+            'ends_after' => $shiftStartTime
+        ];
+        $newPayload = $this->getShifts($input);
+        $output = $newPayload->getOutput();
+
+        $this->assertArrayHasKey('shifts', $output);
+
+        foreach ($this->testConfig->getShiftData() as $shift) {
+            if($shift['start_time'] <= $shiftEndTime && $shift['end_time'] >= $shiftStartTime) {
+                //found a shift that should be returned
+                $this->checkShiftExists($shift, $output['shifts']);
+            }
+        }
+    }
+
+
     //USER STORY 4
     public function testReturnsShiftsWithManager() {
         $input = [
@@ -115,7 +180,7 @@ class GetShiftsTest extends PHPUnit_Framework_TestCase {
         foreach ($output['shifts'] as $actualShift) {
             if(!is_null($actualShift->manager_id)) {
                 $this->assertNotNull($actualShift->manager);
-                $this->checkManager($actualShift->manager);
+                $this->checkUser($actualShift->manager);
             }
         }
     }

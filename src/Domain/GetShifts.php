@@ -5,6 +5,7 @@ namespace Maherio\Chronos\Domain;
 use Maherio\Chronos\Data\Repository\ShiftRepository;
 use Equip\Adr\DomainInterface;
 use Equip\Adr\PayloadInterface;
+use DateTime;
 
 class GetShifts implements DomainInterface {
     /**
@@ -31,11 +32,22 @@ class GetShifts implements DomainInterface {
      */
     public function __invoke(array $input)
     {
-        if(array_key_exists('include_manager', $input)) {
-            $shifts = $this->shiftRepository->findByWithManager($input);
-        } else {
-            $shifts = $this->shiftRepository->findBy($input);
+        if(array_key_exists('starts_before', $input)) {
+            $input['start_time <='] = $input['starts_before'];
         }
+        if(array_key_exists('ends_after', $input)) {
+            $input['end_time >='] = $input['ends_after'];
+        }
+
+        $relations = [];
+        if(array_key_exists('include_manager', $input)) {
+            $relations[] = 'manager';
+        }
+        if(array_key_exists('include_employee', $input)) {
+            $relations[] = 'employee';
+        }
+
+        $shifts = $this->shiftRepository->findByWithRelations($relations, $input);
 
         return $this->payload
             ->withStatus(PayloadInterface::STATUS_OK)
