@@ -30,6 +30,7 @@ chmod 755 ./bin/serve
 
 - I chose to try out Equip. I'd never used any of the 3 suggested frameworks before so I figured I might as well try
 out the When I Work in-house one.
+ -
 - I feel like I need to clarify how I interpreted the prompt, specifically these parts:
  - The prompt says to build a RESTful API, but that it is not intended to be just a CRUD application. Those are slightly
  contradictory statements (a restful api IS just a crud service for resource representations). Therefore, I interpreted
@@ -60,6 +61,9 @@ out the When I Work in-house one.
 
 I'm a little confused about ADR and Equip's implementation of it (I wasn't familiar with either before this).
 
+- I'm confused why Equip doesn't work out of the box, but instead requires the user to install a 3rd party library (zend
+diactoros). I think a framework should work as shipped, and **allow** the user to make use of different implementations
+rather than **require** them to install additional libraries.
 - It seems like **Equip confuses Action with Domain.** The ADR docs state that the Domain replaces the Model from MVC
 and is simply the functionality of domain objects (models, mappers, factories, etc.). Likewise, Action replaces most of
 the Controller logic (that is, to use the request to interact with the Domain and pass the necessary Domain data to a
